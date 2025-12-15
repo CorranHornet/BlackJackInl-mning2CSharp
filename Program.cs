@@ -10,21 +10,31 @@ namespace BlackJackInlämning2CSharp
         static string playerHand;
         static int playerTotal;
         static int dealerTotal;
+        static int playerAces; // Tracks number of Aces for player
+        static int dealerAces; // Tracks number of Aces for dealer
 
         static void Main()
         {
-            Console.WriteLine("Blackjack game - commit 3: card drawing logic");
+            Console.WriteLine("Blackjack game - Commit 4: Ace handling and correct scoring");
             blackJack();
         }
 
         static void blackJack()
         {
             InitializeDeck();
+
             dealerHand = "";
             playerHand = "";
             dealerTotal = 0;
             playerTotal = 0;
+            dealerAces = 0;
+            playerAces = 0;
 
+            // Deal four cards each for testing and demonstration
+            GetCardDealer();
+            GetCardPlayer();
+            GetCardDealer();
+            GetCardPlayer();
             GetCardDealer();
             GetCardPlayer();
             GetCardDealer();
@@ -43,6 +53,15 @@ namespace BlackJackInlämning2CSharp
 
             dealerTotal += cardValue;
             dealerHand += (dealerHand == "" ? "" : ", ") + cardDrawn;
+
+            if (cardValue == 11) dealerAces++;
+
+            // Adjust for Aces if total > 21
+            while (dealerTotal > 21 && dealerAces > 0)
+            {
+                dealerTotal -= 10;
+                dealerAces--;
+            }
         }
 
         static void GetCardPlayer()
@@ -53,16 +72,25 @@ namespace BlackJackInlämning2CSharp
 
             playerTotal += cardValue;
             playerHand += (playerHand == "" ? "" : ", ") + cardDrawn;
+
+            if (cardValue == 11) playerAces++;
+
+            // Adjust for Aces if total > 21
+            while (playerTotal > 21 && playerAces > 0)
+            {
+                playerTotal -= 10;
+                playerAces--;
+            }
         }
 
         static void GetCard(ref int cardValue, ref string cardDrawn)
         {
-            Random rnd = new Random(); 
+            Random rnd = new Random();
             int index = 0;
 
             while (index == 0 || string.IsNullOrEmpty(card[index]))
             {
-                index = rnd.Next(1, 53); // 1–52 inclusive
+                index = rnd.Next(1, 53);
             }
 
             cardDrawn = card[index];
@@ -71,7 +99,7 @@ namespace BlackJackInlämning2CSharp
             ConvertCard(ref cardValue, cardDrawn);
         }
 
-        // Convert card to numeric value 
+        // Convert card to numeric value (Ace = 11 for now)
         static void ConvertCard(ref int cardValue, string cardDrawn)
         {
             string lower = cardDrawn.ToLower();
@@ -99,7 +127,7 @@ namespace BlackJackInlämning2CSharp
                     cardValue = int.Parse(rank);
                     break;
                 default:
-                    cardValue = 0; // fallback, should not occur
+                    cardValue = 0; // fallback
                     break;
             }
         }
