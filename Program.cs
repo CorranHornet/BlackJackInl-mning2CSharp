@@ -16,6 +16,7 @@ class Program
     static void Main()
     {
         Console.WriteLine("Blackjack game project setup - first commit!");
+        //Testing so ruleSet works for GH
         blackJack();
     }
 
