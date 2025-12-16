@@ -7,25 +7,25 @@ namespace BlackJackInlämning2CSharp
         static string[] deck = new string[52];
         static Random random = new Random();
 
-        static int dealerTotal;
-        static int dealerAces;
+        static int playerTotal;
+        static int playerAces;
 
         static void Main()
         {
             SetupDeck();
 
-            Console.WriteLine("Dealer logic test (Blackjack rules)\n");
+            Console.WriteLine("Player turn with Ace handling\n");
 
             bool runAgain = true;
 
             while (runAgain)
             {
-                RunDealerTurn();
+                RunPlayerTurn();
 
-                Console.WriteLine("\nRun dealer again? (y/n)");
+                Console.WriteLine("\nPlay again? (y/n)");
                 string input = Console.ReadLine()?.ToLower();
-
                 runAgain = input == "y";
+
                 Console.WriteLine();
             }
         }
@@ -48,40 +48,59 @@ namespace BlackJackInlämning2CSharp
             }
         }
 
-        static void RunDealerTurn()
+        static void RunPlayerTurn()
         {
-            ResetDealer();
+            ResetPlayer();
 
-            Console.WriteLine("Dealer starts drawing...\n");
+            Console.WriteLine("Player starts drawing...\n");
 
-            // Dealer draws until rules are met
-            while (dealerTotal < 17)
+            bool playerTurn = true;
+
+            while (playerTurn)
             {
-                DrawCardDealer();
-                AdjustForAces(); // removed ref, works directly on static fields
-                Console.WriteLine($"Dealer total: {dealerTotal}\n");
+                DrawCardPlayer();
+                AdjustForAces();
+
+                Console.WriteLine($"Player total: {playerTotal}");
+
+                if (playerTotal > 21)
+                {
+                    Console.WriteLine("Player busts!");
+                    break;
+                }
+
+                Console.WriteLine("\nHit or Stand? (h/s): ");
+                string choice = Console.ReadLine()?.ToLower();
+
+                if (choice == "s")
+                    playerTurn = false;
+
+                Console.WriteLine();
             }
 
-            Console.WriteLine($"Dealer stands with total: {dealerTotal}");
+            Console.WriteLine($"Player ends with total: {playerTotal}");
         }
 
-        static void ResetDealer()
+        static void ResetPlayer()
         {
-            dealerTotal = 0;
-            dealerAces = 0;
+            playerTotal = 0;
+            playerAces = 0;
         }
 
-        static void DrawCardDealer()
+        static void DrawCardPlayer()
         {
             string card = deck[random.Next(deck.Length)];
             int value = ConvertCard(card);
 
-            dealerTotal += value;
+            playerTotal += value;
+
+            Console.WriteLine($"Player draws: {card}");
 
             if (card.StartsWith("ace"))
-                dealerAces++;
-
-            Console.WriteLine($"Dealer draws: {card}");
+            {
+                playerAces++;
+                Console.WriteLine("Ace counted as 11 (may be adjusted later if total exceeds 21)");
+            }
         }
 
         static int ConvertCard(string card)
@@ -98,13 +117,13 @@ namespace BlackJackInlämning2CSharp
             }
         }
 
-        // Refactored to remove ref — works on static fields directly
         static void AdjustForAces()
         {
-            while (dealerTotal > 21 && dealerAces > 0)
+            while (playerTotal > 21 && playerAces > 0)
             {
-                dealerTotal -= 10;
-                dealerAces--;
+                playerTotal -= 10;
+                playerAces--;
+                Console.WriteLine("Ace adjusted from 11 to 1 to avoid bust");
             }
         }
     }
