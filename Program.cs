@@ -7,22 +7,22 @@ namespace BlackJackInlämning2CSharp
         static string[] deck = new string[52];
         static Random random = new Random();
 
-        static int playerTotal;
-        static int playerAces;
+        static int dealerTotal;
+        static int dealerAces;
 
         static void Main()
         {
             SetupDeck();
 
-            Console.WriteLine("Player turn with Ace handling\n");
+            Console.WriteLine("Dealer turn test (Blackjack rules)\n");
 
             bool runAgain = true;
 
             while (runAgain)
             {
-                RunPlayerTurn();
+                RunDealerTurn();
 
-                Console.WriteLine("\nPlay again? (y/n)");
+                Console.WriteLine("\nRun dealer again? (y/n)");
                 string input = Console.ReadLine()?.ToLower();
                 runAgain = input == "y";
 
@@ -48,57 +48,41 @@ namespace BlackJackInlämning2CSharp
             }
         }
 
-        static void RunPlayerTurn()
+        static void RunDealerTurn()
         {
-            ResetPlayer();
+            ResetDealer();
 
-            Console.WriteLine("Player starts drawing...\n");
+            Console.WriteLine("Dealer starts drawing...\n");
 
-            bool playerTurn = true;
-
-            while (playerTurn)
+            // Dealer draws until total >= 17
+            while (dealerTotal < 17)
             {
-                DrawCardPlayer();
+                DrawCardDealer();
                 AdjustForAces();
-
-                Console.WriteLine($"Player total: {playerTotal}");
-
-                if (playerTotal > 21)
-                {
-                    Console.WriteLine("Player busts!");
-                    break;
-                }
-
-                Console.WriteLine("\nHit or Stand? (h/s): ");
-                string choice = Console.ReadLine()?.ToLower();
-
-                if (choice == "s")
-                    playerTurn = false;
-
-                Console.WriteLine();
+                Console.WriteLine($"Dealer total: {dealerTotal}\n");
             }
 
-            Console.WriteLine($"Player ends with total: {playerTotal}");
+            Console.WriteLine($"Dealer stands with total: {dealerTotal}");
         }
 
-        static void ResetPlayer()
+        static void ResetDealer()
         {
-            playerTotal = 0;
-            playerAces = 0;
+            dealerTotal = 0;
+            dealerAces = 0;
         }
 
-        static void DrawCardPlayer()
+        static void DrawCardDealer()
         {
             string card = deck[random.Next(deck.Length)];
             int value = ConvertCard(card);
 
-            playerTotal += value;
+            dealerTotal += value;
 
-            Console.WriteLine($"Player draws: {card}");
+            Console.WriteLine($"Dealer draws: {card}");
 
             if (card.StartsWith("ace"))
             {
-                playerAces++;
+                dealerAces++;
                 Console.WriteLine("Ace counted as 11 (may be adjusted later if total exceeds 21)");
             }
         }
@@ -119,10 +103,10 @@ namespace BlackJackInlämning2CSharp
 
         static void AdjustForAces()
         {
-            while (playerTotal > 21 && playerAces > 0)
+            while (dealerTotal > 21 && dealerAces > 0)
             {
-                playerTotal -= 10;
-                playerAces--;
+                dealerTotal -= 10;
+                dealerAces--;
                 Console.WriteLine("Ace adjusted from 11 to 1 to avoid bust");
             }
         }
