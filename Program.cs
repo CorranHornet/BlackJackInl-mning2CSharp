@@ -12,7 +12,7 @@ namespace BlackJackInlämning2CSharp
             while (runAgain)
             {
                 Game game = new Game();
-                game.Start(); // Single-player test
+                game.Start(); // Single-player vs dealer round
 
                 Console.WriteLine("\nPlay another round? (y/n)");
                 string input = Console.ReadLine()?.ToLower();
