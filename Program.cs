@@ -1,5 +1,5 @@
-﻿using System;
-using BlackJackInlämning2CSharp.Models;
+﻿using BlackJackInlämning2CSharp.Services;
+using System;
 
 namespace BlackJackInlämning2CSharp
 {
@@ -11,16 +11,10 @@ namespace BlackJackInlämning2CSharp
 
             while (runAgain)
             {
-                Deck deck = new Deck();
-                Dealer dealer = new Dealer();
+                Game game = new Game();
+                game.Start(); // Single-player test
 
-                Console.WriteLine("\nDealer draws cards until reaching 17 or more.\n");
-
-                dealer.PlayTurn(deck);
-
-                Console.WriteLine($"Dealer final total: {dealer.Total}");
-
-                Console.WriteLine("\nRun the dealer draw test again? (y/n)");
+                Console.WriteLine("\nPlay another round? (y/n)");
                 string input = Console.ReadLine()?.ToLower();
                 runAgain = input == "y";
                 Console.WriteLine();
