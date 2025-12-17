@@ -16,14 +16,13 @@ namespace BlackJackInlämning2CSharp.Models
             AceCount = 0;
         }
 
-        public virtual void DrawCard(Deck deck)
+        // Player draws a card; not virtual to avoid double-calling
+        public void DrawCard(Deck deck)
         {
             Card card = deck.DrawCard();
             Hand.Add(card);
             Total += card.GetValue();
-
-            if (card.Rank == "ace")
-                AceCount++;
+            if (card.Rank == "ace") AceCount++;
 
             AdjustForAces();
             Console.WriteLine($"Player draws: {card}");

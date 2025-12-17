@@ -1,23 +1,18 @@
-﻿using BlackJackInlämning2CSharp.Services;
-using System;
-
-namespace BlackJackInlämning2CSharp
+﻿namespace BlackJackInlämning2CSharp
 {
     class Program
     {
         static void Main()
         {
-            bool runAgain = true;
+            bool playAgain = true;
 
-            while (runAgain)
+            while (playAgain)
             {
                 Game game = new Game();
-                game.Start(); // Single-player vs dealer round
+                game.Start();
 
-                Console.WriteLine("\nPlay another round? (y/n)");
-                string input = Console.ReadLine()?.ToLower();
-                runAgain = input == "y";
-                Console.WriteLine();
+                Console.WriteLine("\nPlay again? (y/n)");
+                playAgain = Console.ReadLine()?.ToLower() == "y";
             }
         }
     }
