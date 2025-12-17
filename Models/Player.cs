@@ -6,8 +6,8 @@ namespace BlackJackInlämning2CSharp.Models
     class Player
     {
         public List<Card> Hand { get; private set; }
-        public int Total { get; private set; }
-        public int AceCount { get; private set; }
+        public int Total { get; protected set; }
+        public int AceCount { get; protected set; }
 
         public Player()
         {
@@ -16,27 +16,20 @@ namespace BlackJackInlämning2CSharp.Models
             AceCount = 0;
         }
 
-        public void DrawCard(Deck deck)
+        public virtual void DrawCard(Deck deck)
         {
             Card card = deck.DrawCard();
             Hand.Add(card);
-            int value = card.GetValue();
-            Total += value;
+            Total += card.GetValue();
 
             if (card.Rank == "ace")
-            {
                 AceCount++;
-                Console.WriteLine($"Ace drawn! Current total: {Total} (Ace counted as 11, may adjust later)");
-            }
-            else
-            {
-                Console.WriteLine($"Player draws: {card} - total now: {Total}");
-            }
 
             AdjustForAces();
+            Console.WriteLine($"Player draws: {card}");
         }
 
-        private void AdjustForAces()
+        protected void AdjustForAces()
         {
             while (Total > 21 && AceCount > 0)
             {
