@@ -8,13 +8,24 @@ namespace BlackJackInlämning2CSharp
         static void Main()
         {
             Deck deck = new Deck();
+            Player player = new Player();
 
-            Console.WriteLine("Card and Deck refactor test\n");
+            Console.WriteLine("Player class refactor test\n");
 
-            for (int i = 0; i < 5; i++)
+            bool runAgain = true;
+            while (runAgain)
             {
-                Card card = deck.DrawCard();
-                Console.WriteLine($"Drawn card: {card} - value: {card.GetValue()}");
+                player.ResetHand();
+                for (int i = 0; i < 2; i++) // initial 2 cards
+                {
+                    player.DrawCard(deck);
+                }
+
+                Console.WriteLine($"Player total: {player.Total}\n");
+
+                Console.WriteLine("Run player draw again? (y/n)");
+                string input = Console.ReadLine()?.ToLower();
+                runAgain = input == "y";
             }
         }
     }
