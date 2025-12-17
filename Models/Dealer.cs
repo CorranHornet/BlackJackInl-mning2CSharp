@@ -1,12 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlackJackInlämning2CSharp.Models
 {
-    internal class Dealer
+    class Dealer : Player
     {
+        public void PlayTurn(Deck deck)
+        {
+            Console.WriteLine("Dealer's turn:");
+
+            while (Total < 17)
+            {
+                DrawCard(deck);
+            }
+
+            Console.WriteLine($"Dealer stands with {Total}");
+        }
     }
 }
