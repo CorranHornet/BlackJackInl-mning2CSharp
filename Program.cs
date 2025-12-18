@@ -1,18 +1,23 @@
-﻿namespace BlackJackInlämning2CSharp
+﻿using System;
+using BlackJackInlämning2CSharp.Models;
+
+namespace BlackJackInlämning2CSharp
 {
     class Program
     {
         static void Main()
         {
-            bool playAgain = true;
+            Game game = new Game();
 
+            bool playAgain = true;
             while (playAgain)
             {
-                Game game = new Game();
-                game.Start();
+                game.PlayRound();
 
                 Console.WriteLine("\nPlay again? (y/n)");
-                playAgain = Console.ReadLine()?.ToLower() == "y";
+                string input = Console.ReadLine()?.ToLower();
+                playAgain = input == "y";
+                Console.WriteLine();
             }
         }
     }

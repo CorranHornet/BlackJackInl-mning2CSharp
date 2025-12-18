@@ -1,7 +1,6 @@
 ﻿using System;
-using BlackJackInlämning2CSharp.Models;
 
-namespace BlackJackInlämning2CSharp
+namespace BlackJackInlämning2CSharp.Models
 {
     class Game
     {
@@ -16,62 +15,75 @@ namespace BlackJackInlämning2CSharp
             dealer = new Dealer();
         }
 
-        public void Start()
+        public void PlayRound()
         {
             player.ResetHand();
             dealer.ResetHand();
 
-            //Player initial deal: exactly 2 cards
+            Console.WriteLine("\nNew Blackjack round\n");
+
+            // Initial draw
             player.DrawCard(deck);
             player.DrawCard(deck);
 
-            // Dealer draws initial cards
             dealer.DrawInitialCards(deck);
 
-            // Player turn
+            Console.WriteLine($"\nPlayer total: {player.Total}");
+
             PlayerTurn();
 
-            // Reveal dealer hidden card
+            // Reveal hidden card regardless of player bust
             dealer.RevealHiddenCard();
 
-            // Dealer plays if player not busted
             if (player.Total <= 21)
                 dealer.PlayTurn(deck);
 
-            ShowFinalResult();
+            DetermineWinner();
         }
 
         private void PlayerTurn()
         {
             while (true)
             {
-                Console.WriteLine($"\nPlayer total: {player.Total}");
-                Console.Write("Hit or Stand? (h/s): ");
-                string input = Console.ReadLine()?.ToLower();
+                Console.Write("\nHit or Stand? (h/s): ");
+                string choice = Console.ReadLine()?.ToLower();
 
-                if (input == "s") break;
+                if (choice == "s")
+                    break;
 
-                if (input == "h")
+                if (choice == "h")
                 {
                     player.DrawCard(deck);
+                    Console.WriteLine($"Player total: {player.Total}");
+
+                    // Show dealer total after each player action
+                    Console.WriteLine($"Dealer total: {dealer.Total}");
+
                     if (player.Total > 21)
                     {
-                        Console.WriteLine($"Player busts with {player.Total}");
+                        Console.WriteLine("Player busts!");
                         break;
                     }
                 }
             }
         }
 
-        private void ShowFinalResult()
+        private void DetermineWinner()
         {
-            Console.WriteLine($"\nPlayer total: {player.Total}");
+            Console.WriteLine("\nFinal result:");
+            Console.WriteLine($"Player total: {player.Total}");
             Console.WriteLine($"Dealer total: {dealer.Total}");
 
-            if (player.Total > 21) Console.WriteLine("Dealer wins!");
-            else if (dealer.Total > 21 || player.Total > dealer.Total) Console.WriteLine("Player wins!");
-            else if (dealer.Total > player.Total) Console.WriteLine("Dealer wins!");
-            else Console.WriteLine("Push (tie).");
+            if (player.Total > 21)
+                Console.WriteLine("Dealer wins!");
+            else if (dealer.Total > 21)
+                Console.WriteLine("Player wins!");
+            else if (player.Total > dealer.Total)
+                Console.WriteLine("Player wins!");
+            else if (dealer.Total > player.Total)
+                Console.WriteLine("Dealer wins!");
+            else
+                Console.WriteLine("Push (tie).");
         }
     }
 }

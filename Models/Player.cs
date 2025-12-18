@@ -6,7 +6,7 @@ namespace BlackJackInlämning2CSharp.Models
     class Player
     {
         public List<Card> Hand { get; private set; }
-        public int Total { get; protected set; }
+        public int Total { get; protected set; }  // Protected so subclasses can access
         public int AceCount { get; protected set; }
 
         public Player()
@@ -16,16 +16,22 @@ namespace BlackJackInlämning2CSharp.Models
             AceCount = 0;
         }
 
-        // Player draws a card; not virtual to avoid double-calling
-        public void DrawCard(Deck deck)
+        public virtual void DrawCard(Deck deck)
         {
             Card card = deck.DrawCard();
             Hand.Add(card);
             Total += card.GetValue();
-            if (card.Rank == "ace") AceCount++;
+
+            if (card.Rank == "ace")
+                AceCount++;
 
             AdjustForAces();
-            Console.WriteLine($"Player draws: {card}");
+            PrintDraw(card);
+        }
+
+        protected virtual void PrintDraw(Card card)
+        {
+            Console.WriteLine($"Player draws: {card} - total now: {Total}");
         }
 
         protected void AdjustForAces()

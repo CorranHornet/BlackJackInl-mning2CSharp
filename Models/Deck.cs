@@ -11,10 +11,9 @@ namespace BlackJackInlämning2CSharp.Models
         public Deck()
         {
             string[] suits = { "hearts", "diamonds", "clubs", "spades" };
-            string[] ranks = { "ace","2","3","4","5","6","7","8","9","10","jack","queen","king" };
+            string[] ranks = { "ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king" };
 
             cards = new List<Card>();
-
             foreach (var suit in suits)
             {
                 foreach (var rank in ranks)
