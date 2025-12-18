@@ -1,5 +1,5 @@
 ﻿using System;
-using BlackJackInlämning2CSharp.Models;
+using System.Collections.Generic;
 
 namespace BlackJackInlämning2CSharp.Models
 {
@@ -7,48 +7,60 @@ namespace BlackJackInlämning2CSharp.Models
     {
         private Card hiddenCard;
 
-        // Dealer override allows changing text output
-        public virtual void DrawCard(Deck deck, bool showOutput = true)
-        {
-            Card card = deck.DrawCard();
-            Hand.Add(card);
-            Total += card.GetValue();
-            if (card.Rank == "ace") AceCount++;
-
-            AdjustForAces();
-            if (showOutput)
-                Console.WriteLine($"Dealer draws: {card}");
-        }
-
-        // Initial dealer draw: first visible, second hidden
+        // Dealer draws 2 cards initially
         public void DrawInitialCards(Deck deck)
         {
-            DrawCard(deck); // First card visible
+            // First card is visible, suppress base PrintDraw
+            Card firstCard = deck.DrawCard();
+            Hand.Add(firstCard);
+            Total += firstCard.GetValue();
+            if (firstCard.Rank == "ace") AceCount++;
+            AdjustForAces();
 
-            hiddenCard = deck.DrawCard(); // Second card hidden
+            Console.WriteLine($"Dealer shows: {firstCard}");
+            Console.WriteLine($"Dealer total (visible card): {firstCard.GetValue()}");
+
+            // Second card is hidden
+            hiddenCard = deck.DrawCard();
             Hand.Add(hiddenCard);
             Total += hiddenCard.GetValue();
             if (hiddenCard.Rank == "ace") AceCount++;
             AdjustForAces();
+
             Console.WriteLine("Dealer draws a hidden card");
         }
 
+        // Reveal the hidden card and show full hand
         public void RevealHiddenCard()
         {
-            if (hiddenCard != null)
+            Console.WriteLine($"\nDealer reveals hidden card: {hiddenCard}");
+            Console.Write("Dealer hand: ");
+            for (int i = 0; i < Hand.Count; i++)
             {
-                Console.WriteLine($"Dealer reveals hidden card: {hiddenCard}");
-                hiddenCard = null;
+                Console.Write($"{Hand[i]}");
+                if (i < Hand.Count - 1) Console.Write(", ");
             }
+            Console.WriteLine($"\nDealer total: {Total}");
         }
 
         public void PlayTurn(Deck deck)
         {
+            Console.WriteLine("\nDealer turn:");
+
             while (Total < 17)
             {
                 DrawCard(deck);
+                Console.WriteLine($"Dealer total: {Total}");
             }
+
             Console.WriteLine($"Dealer stands with {Total}");
+        }
+
+        protected override void PrintDraw(Card card)
+        {
+            // Only print draws after initial cards
+            if (!Hand.Contains(card) || card != Hand[0])
+                Console.WriteLine($"Dealer draws: {card}");
         }
     }
 }
